@@ -3,6 +3,7 @@ require('dotenv').config()
 const cookieParser = require("cookie-parser");
 const { connection } = require('./config/db');
 const userRouter = require('./routers/userRouter');
+const adminRouter = require('./routers/adminRouter');
 
 
 const app = express()
@@ -16,6 +17,7 @@ app.use(express.static('assets'));
 app.use(cookieParser());
 
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/admin', adminRouter);
 
 app.get('/', (req, res) => {
     res.render('index');

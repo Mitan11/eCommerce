@@ -105,6 +105,7 @@ const login = async (req, res) => {
             });
         }
 
+
         const token = jwt.sign(
             { id: user._id },
             process.env.JWT_SECRET,
@@ -114,7 +115,11 @@ const login = async (req, res) => {
         res.cookie("jwt", token);
 
         // Redirect after successful login
-        res.redirect("/api/v1/user/dashboard");
+        if (user.role === 'admin') {
+            res.redirect("/api/v1/admin/dashboard");
+        } else {
+            res.redirect("/api/v1/user/dashboard");
+        }
 
         // res.status(200).json({
         //     status: "success",
@@ -149,7 +154,7 @@ const logout = async (req, res) => {
         //     status: "success",
         //     message: "Logout successful",
         // });
-    }catch (error) {
+    } catch (error) {
         console.error("Logout error:", error);
         res.status(500).json({
             status: "fail",

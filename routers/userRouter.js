@@ -11,8 +11,8 @@ userRouter.get('/logout', logout);
 
 
 
-userRouter.get('/dashboard', auth ,(req, res) => {
-    res.render('user/dashboard',{user : req.user});
+userRouter.get('/dashboard', auth, (req, res) => {
+    res.render('user/dashboard', { user: req.user });
 });
 
 module.exports = userRouter;
