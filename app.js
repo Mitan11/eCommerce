@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config()
 const cookieParser = require("cookie-parser");
 const { connection } = require('./config/db');
+const userRouter = require('./routers/userRouter');
 
 
 const app = express()
@@ -11,11 +12,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static('public'));
+app.use(express.static('assets'));
 app.use(cookieParser());
 
+app.use('/api/v1/user', userRouter);
 
 app.get('/', (req, res) => {
     res.render('index');
+});
+
+app.get('/register', (req, res) => {
+    res.render('register');
 });
 
 app.listen(port, (error) => {
