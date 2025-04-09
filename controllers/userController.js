@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const userModel = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
     try {
@@ -104,6 +105,14 @@ const login = async (req, res) => {
             });
         }
 
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+        );
+
+        // Set token in cookie
+        res.cookie("jwt", token);
+
         // Redirect after successful login
         res.redirect("/api/v1/user/dashboard");
 
@@ -126,7 +135,31 @@ const login = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+
+    try {
+        // Clear the cookie
+        res.clearCookie("jwt");
+
+        // Redirect to home page after logout
+        res.redirect("/");
+
+        // Optional JSON response (for API usage)
+        // res.status(200).json({
+        //     status: "success",
+        //     message: "Logout successful",
+        // });
+    }catch (error) {
+        console.error("Logout error:", error);
+        res.status(500).json({
+            status: "fail",
+            message: error.message,
+        });
+    }
+}
+
 module.exports = {
     register,
     login,
+    logout,
 };
