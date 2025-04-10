@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <%- include('./components/header', { title: 'Add User' }) %>
+        <style>
+            .main-content {
+                margin-top: 60px;
+                /* Space for fixed navbar */
+                padding-top: 20px;
+            }
+
+            .page-header {
+                background-color: #f8f9fa;
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            .card {
+                border-radius: 12px;
+                overflow: hidden;
+                border: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                margin-bottom: 1.5rem;
+            }
+
+            .card-header {
+                padding: 1.25rem 1.5rem;
+                background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+                color: white;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .btn {
+                border-radius: 8px;
+                padding: 0.5rem 1rem;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+                border: none;
+            }
+
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+            }
+
+            .btn-success {
+                background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+                border: none;
+            }
+
+            .btn-success:hover {
+                background: linear-gradient(135deg, #157347 0%, #115c39 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
+            }
+
+            .btn-danger {
+                background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+                border: none;
+            }
+
+            .btn-danger:hover {
+                background: linear-gradient(135deg, #bb2d3b 0%, #9a2530 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+            }
+
+            .btn-warning {
+                background: linear-gradient(135deg, #ffc107 0%, #cc9a06 100%);
+                border: none;
+                color: #212529;
+            }
+
+            .btn-warning:hover {
+                background: linear-gradient(135deg, #ffca2c 0%, #d4a30c 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+                color: #212529;
+            }
+
+            .avatar-upload {
+                position: relative;
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background-color: #f8f9fa;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                border: 3px dashed #dee2e6;
+                transition: all 0.3s ease;
+            }
+
+            .avatar-upload:hover {
+                border-color: #0d6efd;
+                background-color: #e9ecef;
+            }
+
+            .avatar-upload i {
+                font-size: 2rem;
+                color: #6c757d;
+            }
+
+            .form-label {
+                font-weight: 500;
+                color: #495057;
+            }
+
+            .form-control:focus,
+            .form-select:focus {
+                border-color: #86b7fe;
+                box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            }
+
+            .form-text {
+                color: #6c757d;
+                font-size: 0.875rem;
+            }
+
+            .password-toggle {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+                color: #6c757d;
+            }
+
+            .password-field {
+                position: relative;
+            }
+
+            /* Fix for screen overflow */
+            .container-fluid {
+                max-width: 100%;
+                padding-right: 15px;
+                padding-left: 15px;
+            }
+
+            .row {
+                margin-right: 0;
+                margin-left: 0;
+            }
+
+            .col-md-9,
+            .col-lg-10 {
+                padding-right: 15px;
+                padding-left: 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            @media (min-width: 768px) {
+                .page-header {
+                    flex-direction: row;
+                    align-items: center;
+                }
+            }
+        </style>
+</head>
+
+<body>
+    <!-- Include Navbar -->
+    <%- include('./components/navbar', { user: user, activePage: 'users' }) %>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Include Sidebar -->
+                <%- include('./components/sidebar', { activePage: 'users' }) %>
+
+                    <!-- Main Content -->
+                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 main-content">
+                        <div class="page-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <h1 class="h2 mb-0">Add New User</h1>
+                                <p class="text-muted mb-0">Create a new user account</p>
+                            </div>
+                            <div class="mt-2 mt-md-0">
+                                <a href="/api/v1/admin/users" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i> Back to Users
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Add User Form -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">User Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="/api/v1/admin/users/add" method="POST" enctype="multipart/form-data">
+                                    <div class="row">
+                                        <!-- Avatar Upload -->
+                                        <div class="col-md-3 mb-4 text-center">
+                                            <div class="avatar-upload mb-3" id="avatarUpload">
+                                                <i class="fas fa-user-plus"></i>
+                                            </div>
+                                            <input type="file" name="image" id="avatarInput" class="d-none"
+                                                accept="image/*">
+                                            <div id="avatarPreview" class="d-none">
+                                                <img src="/images/uploads/profile.png" alt="User Avatar"
+                                                    class="user-avatar mb-2" id="previewImage">
+                                                <div>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                        id="removeAvatar">
+                                                        <i class="fas fa-trash-alt me-1"></i> Remove
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p class="text-muted small">Default image will be used if none provided</p>
+                                        </div>
+
+                                        <!-- User Details -->
+                                        <div class="col-md-9">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label for="name" class="form-label">Full Name <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="name" name="name"
+                                                        required>
+                                                    <div class="form-text">Enter the user's full name</div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="email" class="form-label">Email Address <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="email" class="form-control" id="email" name="email"
+                                                        required>
+                                                    <div class="form-text">Enter a valid email address</div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="password" class="form-label">Password <span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="password-field">
+                                                        <input type="password" class="form-control" id="password"
+                                                            name="password" required>
+                                                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                                                    </div>
+                                                    <div class="form-text">Password must be at least 6 characters long
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="role" class="form-label">Role <span
+                                                            class="text-danger">*</span></label>
+                                                    <select class="form-select" id="role" name="role" required>
+                                                        <option value="user" selected>User</option>
+                                                        <option value="admin">Admin</option>
+                                                    </select>
+                                                    <div class="form-text">Select the user's role</div>
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="sendEmail" name="sendEmail" checked>
+                                                        <label class="form-check-label" for="sendEmail">
+                                                            Send welcome email to the user
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-outline-secondary me-2"
+                                            onclick="window.location.href='/api/v1/admin/users'">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Create User
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </main>
+            </div>
+        </div>
+
+        <!-- Include Footer -->
+        <%- include('./components/footer') %>
+
+            <!-- Include Scripts -->
+            <%- include('./components/scripts') %>
+
+                <script>
+                    // Avatar upload functionality
+                    const avatarUpload = document.getElementById('avatarUpload');
+                    const avatarInput = document.getElementById('avatarInput');
+                    const avatarPreview = document.getElementById('avatarPreview');
+                    const previewImage = document.getElementById('previewImage');
+                    const removeAvatar = document.getElementById('removeAvatar');
+
+                    avatarUpload.addEventListener('click', () => {
+                        avatarInput.click();
+                    });
+
+                    avatarInput.addEventListener('change', (e) => {
+                        if (e.target.files && e.target.files[0]) {
+                            const reader = new FileReader();
+
+                            reader.onload = (event) => {
+                                previewImage.src = event.target.result;
+                                avatarUpload.classList.add('d-none');
+                                avatarPreview.classList.remove('d-none');
+                            };
+
+                            reader.readAsDataURL(e.target.files[0]);
+                        }
+                    });
+
+                    removeAvatar.addEventListener('click', () => {
+                        avatarInput.value = '';
+                        avatarUpload.classList.remove('d-none');
+                        avatarPreview.classList.add('d-none');
+                    });
+
+                    // Password toggle functionality
+                    const togglePassword = document.getElementById('togglePassword');
+                    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+                    const password = document.getElementById('password');
+                    const confirmPassword = document.getElementById('confirmPassword');
+
+                    togglePassword.addEventListener('click', () => {
+                        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                        password.setAttribute('type', type);
+                        togglePassword.classList.toggle('fa-eye');
+                        togglePassword.classList.toggle('fa-eye-slash');
+                    });
+
+                    toggleConfirmPassword.addEventListener('click', () => {
+                        const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                        confirmPassword.setAttribute('type', type);
+                        toggleConfirmPassword.classList.toggle('fa-eye');
+                        toggleConfirmPassword.classList.toggle('fa-eye-slash');
+                    });
+
+                    // Form validation
+                    const form = document.querySelector('form');
+
+                    form.addEventListener('submit', (e) => {
+                        const password = document.getElementById('password').value;
+                        const confirmPassword = document.getElementById('confirmPassword').value;
+
+                        if (password !== confirmPassword) {
+                            e.preventDefault();
+                            alert('Passwords do not match!');
+                        }
+
+                        if (password.length < 6) {
+                            e.preventDefault();
+                            alert('Password must be at least 6 characters long!');
+                        }
+                    });
+                </script>
+</body>
+
+</html>

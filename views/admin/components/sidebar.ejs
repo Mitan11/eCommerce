@@ -36,19 +36,19 @@
         </div>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" href="/api/v1/admin/products/new">
+                <a class="nav-link <%= activePage === 'addProduct' ? 'active' : '' %>" href="/api/v1/admin/addProduct">
                     <i class="fas fa-plus"></i>
                     Add Product
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/api/v1/admin/categories/new">
+                <a class="nav-link <%= activePage === 'addCategory' ? 'active' : '' %>" href="/api/v1/admin/addCategory">
                     <i class="fas fa-folder-plus"></i>
                     Add Category
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/api/v1/admin/users/new">
+                <a class="nav-link <%= activePage === 'addUser' ? 'active' : '' %>" href="/api/v1/admin/addUser">
                     <i class="fas fa-user-plus"></i>
                     Add User
                 </a>
@@ -59,12 +59,7 @@
             Settings
         </div>
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link <%= activePage === 'settings' ? 'active' : '' %>" href="/api/v1/admin/settings">
-                    <i class="fas fa-cog"></i>
-                    General Settings
-                </a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link <%= activePage === 'profile' ? 'active' : '' %>" href="/api/v1/admin/profile">
                     <i class="fas fa-user-cog"></i>

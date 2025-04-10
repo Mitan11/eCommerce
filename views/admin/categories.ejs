@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <%- include('./components/header', { title: 'Categories' }) %>
+    <style>
+        .main-content {
+            margin-top: 60px; /* Space for fixed navbar */
+            padding-top: 20px;
+        }
+        
+        .page-header {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #157347 0%, #115c39 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            border: none;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #bb2d3b 0%, #9a2530 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #cc9a06 100%);
+            border: none;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #ffca2c 0%, #d4a30c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+            color: #212529;
+        }
+        
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .category-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .status-badge {
+            padding: 0.35rem 0.65rem;
+            border-radius: 50rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6c757d;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #dee2e6;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box .form-control {
+            padding-left: 2.5rem;
+            border-radius: 8px;
+        }
+        
+        .search-box .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        /* Fix for screen overflow */
+        .container-fluid {
+            max-width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        
+        .row {
+            margin-right: 0;
+            margin-left: 0;
+        }
+        
+        .col-md-9, .col-lg-10 {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        @media (min-width: 768px) {
+            .page-header {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Include Navbar -->
+    <%- include('./components/navbar', { user: user, activePage: 'categories' }) %>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include Sidebar -->
+            <%- include('./components/sidebar', { activePage: 'categories' }) %>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 main-content">
+                <div class="page-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h2 mb-0">Categories</h1>
+                        <p class="text-muted mb-0">Manage your product categories</p>
+                    </div>
+                    <div class="mt-2 mt-md-0">
+                        <a href="/api/v1/admin/categories/add" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> Add New Category
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Search and Filter Section -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="search-box">
+                                    <i class="fas fa-search search-icon"></i>
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Search categories...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="statusFilter">
+                                    <option value="all">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="sortBy">
+                                    <option value="name-asc">Name (A-Z)</option>
+                                    <option value="name-desc">Name (Z-A)</option>
+                                    <option value="products-desc">Most Products</option>
+                                    <option value="products-asc">Least Products</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Table -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">All Categories</h5>
+                        <span class="badge bg-primary"><%= categories ? categories.length : 0 %> Categories</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <% if (categories && categories.length > 0) { %>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Products</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col" style="width: 150px;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% categories.forEach(category => { %>
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-bold"><%= category.categoryName %></div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-truncate" style="max-width: 300px;">
+                                                        <%= category.description || 'No description available' %>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info"><%= category.productCount || 0 %> Products</span>
+                                                </td>
+                                                <td>
+                                                    <% if (category.isActive !== false) { %>
+                                                        <span class="status-badge status-active">Active</span>
+                                                    <% } else { %>
+                                                        <span class="status-badge status-inactive">Inactive</span>
+                                                    <% } %>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a href="/api/v1/admin/categories/edit/<%= category._id %>" class="btn btn-sm btn-warning" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+
+                                                        <button type="button" class="btn btn-sm btn-danger" title="Delete" onclick="confirmDelete('<%= category._id %>', '<%= category.name %>')">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-folder-open"></i>
+                                </div>
+                                <h4>No Categories Found</h4>
+                                <p>You haven't created any categories yet. Start by adding your first category.</p>
+                                <a href="/api/v1/admin/categories/add" class="btn btn-primary mt-3">
+                                    <i class="fas fa-plus me-1"></i> Add Your First Category
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+    <%- include('./components/footer') %>
+
+    <!-- Include Scripts -->
+    <%- include('./components/scripts') %>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete the category "<span id="categoryNameToDelete"></span>"?
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-1"></i> This action cannot be undone. All products in this category will be moved to "Uncategorized".
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteForm" action="" method="POST" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger">Delete Category</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const categoryName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const categoryDesc = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                
+                if (categoryName.includes(searchTerm) || categoryDesc.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        // Status filter
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            const status = this.value;
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const statusCell = row.querySelector('td:nth-child(5)');
+                const isActive = statusCell.querySelector('.status-active') !== null;
+                
+                if (status === 'all' || 
+                    (status === 'active' && isActive) || 
+                    (status === 'inactive' && !isActive)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        // Sort functionality
+        document.getElementById('sortBy').addEventListener('change', function() {
+            const sortValue = this.value;
+            const tbody = document.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((a, b) => {
+                if (sortValue === 'name-asc') {
+                    return a.querySelector('td:nth-child(2)').textContent.localeCompare(b.querySelector('td:nth-child(2)').textContent);
+                } else if (sortValue === 'name-desc') {
+                    return b.querySelector('td:nth-child(2)').textContent.localeCompare(a.querySelector('td:nth-child(2)').textContent);
+                } else if (sortValue === 'products-desc') {
+                    const aCount = parseInt(a.querySelector('td:nth-child(4) .badge').textContent);
+                    const bCount = parseInt(b.querySelector('td:nth-child(4) .badge').textContent);
+                    return bCount - aCount;
+                } else if (sortValue === 'products-asc') {
+                    const aCount = parseInt(a.querySelector('td:nth-child(4) .badge').textContent);
+                    const bCount = parseInt(b.querySelector('td:nth-child(4) .badge').textContent);
+                    return aCount - bCount;
+                }
+                return 0;
+            });
+            
+            // Clear the tbody
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+            
+            // Add the sorted rows back
+            rows.forEach(row => {
+                tbody.appendChild(row);
+            });
+        });
+        
+        // Delete confirmation
+        function confirmDelete(categoryId, categoryName) {
+            document.getElementById('categoryNameToDelete').textContent = categoryName;
+            document.getElementById('deleteForm').action = `/api/v1/admin/categories/delete/${categoryId}`;
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+    </script>
+</body>
+</html>

@@ -53,7 +53,7 @@
                         <p class="lead">Manage your e-commerce platform</p>
                     </div>
                     <div class="col-md-4 text-end">
-                        <a href="/api/v1/admin/products/new" class="btn btn-primary">
+                        <a href="/api/v1/admin/addProduct" class="btn btn-primary">
                             <i class="fas fa-plus"></i> Add New Product
                         </a>
                     </div>
@@ -73,7 +73,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="card-title">Total Products</h6>
-                                            <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.totalProducts : 0 %></h2>
+                                            <h2 class="mb-0"><%= products.length %></h2>
                                         </div>
                                         <div class="stats-icon">
                                             <i class="fas fa-box"></i>
@@ -88,7 +88,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="card-title">Total Categories</h6>
-                                            <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.totalCategories : 0 %></h2>
+                                            <h2 class="mb-0"><%= categories.length %></h2>
                                         </div>
                                         <div class="stats-icon">
                                             <i class="fas fa-tags"></i>
@@ -157,18 +157,18 @@
                         <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <a href="/api/v1/admin/products/new" class="btn btn-primary">
+                                    <a href="/api/v1/admin/addProduct" class="btn btn-primary">
                                         <i class="fas fa-plus"></i> Add New Product
                                     </a>
                                 </div>
                             </div>
                             <div class="row">
-                                <% if (typeof products !== 'undefined' && products.length > 0) { %>
+                                <% if (products.length > 0) { %>
                                     <% products.forEach(product => { %>
                                         <div class="col-md-4 mb-4">
                                             <div class="card product-card h-100">
                                                 <% if (product.image) { %>
-                                                    <img src="<%= product.image %>" class="card-img-top" alt="<%= product.name %>">
+                                                    <img src="/images/uploads/<%= product.image %>" class="card-img-top" alt="<%= product.productName %>">
                                                 <% } else { %>
                                                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
                                                         style="height: 200px;">
@@ -177,16 +177,16 @@
                                                 <% } %>
                                                 <div class="card-body">
                                                     <h5 class="card-title">
-                                                        <%= product.name %>
+                                                        <%= product.productName %>
                                                     </h5>
                                                     <p class="card-text">
-                                                        <%= product.description %>
+                                                        <%= product.productDescription %>
                                                     </p>
-                                                    <p class="card-text"><strong>Price: $<%= product.price %></strong>
+                                                    <p class="card-text"><strong>Price: $<%= product.productPrice %></strong>
                                                     </p>
                                                     <% if (product.category) { %>
                                                         <span class="badge bg-secondary">
-                                                            <%= product.category.name %>
+                                                            <%= product.category.categoryName %>
                                                         </span>
                                                     <% } %>
                                                 </div>
@@ -219,19 +219,19 @@
                         <div class="tab-pane fade" id="categories" role="tabpanel" aria-labelledby="categories-tab">
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <a href="/api/v1/admin/categories/new" class="btn btn-primary">
+                                    <a href="/api/v1/admin/addCategory" class="btn btn-primary">
                                         <i class="fas fa-plus"></i> Add New Category
                                     </a>
                                 </div>
                             </div>
                             <div class="row">
-                                <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                                <% if (categories.length > 0) { %>
                                     <% categories.forEach(category => { %>
                                         <div class="col-md-4 mb-4">
                                             <div class="card h-100">
                                                 <div class="card-body">
                                                     <h5 class="card-title">
-                                                        <%= category.name %>
+                                                        <%= category.categoryName %>
                                                     </h5>
                                                     <p class="card-text">
                                                         <%= category.description || 'No description available' %>
@@ -292,26 +292,27 @@
                                     </thead>
                                     <tbody>
                                         <% if (typeof users !== 'undefined' && users.length > 0) { %>
-                                            <% users.forEach(user => { %>
+                                            <% users.forEach(item => { %>
+                                                <% if (item._id.toString() !== user._id.toString()) { %>
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex align-items-center">
-                                                            <img src="<%= user.image %>" alt="User Avatar" class="user-avatar me-2">
-                                                            <%= user.name %>
+                                                            <img src="/images/uploads/<%= item.image %>" alt="User Avatar" class="user-avatar me-2">
+                                                            <%= item.name %>
                                                         </div>
                                                     </td>
-                                                    <td><%= user.email %></td>
+                                                    <td><%= item.email %></td>
                                                     <td>
-                                                        <span class="badge <%= user.role === 'admin' ? 'bg-danger' : 'bg-primary' %>">
-                                                            <%= user.role %>
+                                                        <span class="badge <%= item.role === 'admin' ? 'bg-danger' : 'bg-primary' %>">
+                                                            <%= item.role %>
                                                         </span>
                                                     </td>
                                                     <td>
                                                         <div class="btn-group" role="group">
-                                                            <a href="/api/v1/admin/users/<%= user._id %>/edit" class="btn btn-sm btn-outline-primary me-2">
+                                                            <a href="/api/v1/admin/users/<%= item._id %>/edit" class="btn btn-sm btn-outline-primary me-2">
                                                                 <i class="fas fa-edit"></i> Edit
                                                             </a>
-                                                            <form action="/api/v1/admin/users/<%= user._id %>?_method=DELETE" method="POST" class="d-inline">
+                                                            <form action="/api/v1/admin/users/<%= item._id %>?_method=DELETE" method="POST" class="d-inline">
                                                                 <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this user?')">
                                                                     <i class="fas fa-trash"></i> Delete
                                                                 </button>
@@ -319,6 +320,7 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                <% } %>
                                             <% }); %>
                                         <% } else { %>
                                             <tr>
