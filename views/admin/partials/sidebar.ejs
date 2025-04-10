@@ -1,0 +1,76 @@
+<!-- Admin Sidebar -->
+<nav class="sidebar d-md-block">
+    <div class="sidebar-sticky">
+        <div class="sidebar-heading">
+            Admin Panel
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>" href="/api/v1/admin/dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'products' ? 'active' : '' %>" href="/api/v1/admin/products">
+                    <i class="fas fa-box"></i>
+                    Products
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'categories' ? 'active' : '' %>" href="/api/v1/admin/categories">
+                    <i class="fas fa-tags"></i>
+                    Categories
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'users' ? 'active' : '' %>" href="/api/v1/admin/users">
+                    <i class="fas fa-users"></i>
+                    Users
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-heading mt-4">
+            Quick Actions
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/api/v1/admin/products/new">
+                    <i class="fas fa-plus"></i>
+                    Add Product
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/api/v1/admin/categories/new">
+                    <i class="fas fa-folder-plus"></i>
+                    Add Category
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/api/v1/admin/users/new">
+                    <i class="fas fa-user-plus"></i>
+                    Add User
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-heading mt-4">
+            Settings
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'settings' ? 'active' : '' %>" href="/api/v1/admin/settings">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'profile' ? 'active' : '' %>" href="/api/v1/admin/profile">
+                    <i class="fas fa-user-cog"></i>
+                    Profile Settings
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav> 

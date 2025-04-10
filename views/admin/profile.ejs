@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/header', { title: 'Profile' }) %>
+    <style>
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .profile-header {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .profile-section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .profile-section h4 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <% const activePage = 'profile'; %>
+    
+    <!-- Navbar -->
+    <%- include('./partials/navbar', { activePage }) %>
+
+    <!-- Sidebar -->
+    <%- include('./partials/sidebar', { activePage }) %>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1>Profile Settings</h1>
+                        <p class="lead">Manage your account information</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Profile Information -->
+                    <div class="col-md-4 mb-4">
+                        <div class="profile-section text-center">
+                            <div class="mb-4">
+                                <img src="<%= user.image %>" alt="Profile Avatar" class="profile-avatar mb-3">
+                                <h4><%= user.name %></h4>
+                                <p class="text-muted"><%= user.email %></p>
+                                <span class="badge bg-danger">Administrator</span>
+                            </div>
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changeAvatarModal">
+                                    <i class="fas fa-camera"></i> Change Avatar
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Profile Forms -->
+                    <div class="col-md-8">
+                        <!-- Personal Information Form -->
+                        <div class="profile-section">
+                            <h4>Personal Information</h4>
+                            <form action="/api/v1/admin/profile/update" method="POST">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Password Change Form -->
+                        <div class="profile-section">
+                            <h4>Change Password</h4>
+                            <form action="/api/v1/admin/profile/password" method="POST">
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-key"></i> Update Password
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <%- include('./partials/footer') %>
+    </main>
+
+    <!-- Change Avatar Modal -->
+    <div class="modal fade" id="changeAvatarModal" tabindex="-1" aria-labelledby="changeAvatarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeAvatarModalLabel">Change Profile Picture</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/api/v1/admin/profile/avatar" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Upload New Avatar</label>
+                            <input class="form-control" type="file" id="avatar" name="avatar" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label for="avatarUrl" class="form-label">Or Enter Image URL</label>
+                            <input type="url" class="form-control" id="avatarUrl" name="avatarUrl" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Update Avatar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <%- include('./partials/scripts') %>
+</body>
+</html>

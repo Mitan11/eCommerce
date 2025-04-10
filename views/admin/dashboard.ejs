@@ -1,2 +1,346 @@
-hello <%=user.name%>
-<a href="/api/v1/user/logout">Logout</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/header', { title: 'Dashboard' }) %>
+    <style>
+        .welcome-section {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .product-card {
+            transition: transform 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .stats-card {
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        .stats-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <% const activePage = 'dashboard'; %>
+    
+    <!-- Navbar -->
+    <%- include('./partials/navbar', { activePage }) %>
+
+    <!-- Sidebar -->
+    <%- include('./partials/sidebar', { activePage }) %>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1>Welcome, <%= user.name %>!</h1>
+                        <p class="lead">Manage your e-commerce platform</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="/api/v1/admin/products/new" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add New Product
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Stats Section -->
+            <div class="container-fluid mb-4">
+                <div class="content-container">
+                    <h4 class="mb-4">Dashboard Overview</h4>
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="card stats-card bg-primary text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="card-title">Total Products</h6>
+                                            <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.totalProducts : 0 %></h2>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="fas fa-box"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card stats-card bg-success text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="card-title">Total Categories</h6>
+                                            <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.totalCategories : 0 %></h2>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="fas fa-tags"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card stats-card bg-info text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="card-title">Total Users</h6>
+                                            <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.totalUsers : 0 %></h2>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card stats-card bg-warning text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="card-title">Admin Users</h6>
+                                            <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.adminUsers : 0 %></h2>
+                                        </div>
+                                        <div class="stats-icon">
+                                            <i class="fas fa-user-shield"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="container-fluid">
+                <div class="content-container">
+                    <!-- Tabs for different views -->
+                    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="products-tab" data-bs-toggle="tab"
+                                data-bs-target="#products" type="button" role="tab" aria-controls="products"
+                                aria-selected="true">Products</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories"
+                                type="button" role="tab" aria-controls="categories" aria-selected="false">Categories</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users"
+                                type="button" role="tab" aria-controls="users" aria-selected="false">Users</button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="myTabContent">
+                        <!-- Products Tab -->
+                        <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <a href="/api/v1/admin/products/new" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Add New Product
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <% if (typeof products !== 'undefined' && products.length > 0) { %>
+                                    <% products.forEach(product => { %>
+                                        <div class="col-md-4 mb-4">
+                                            <div class="card product-card h-100">
+                                                <% if (product.image) { %>
+                                                    <img src="<%= product.image %>" class="card-img-top" alt="<%= product.name %>">
+                                                <% } else { %>
+                                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                                                        style="height: 200px;">
+                                                        <i class="fas fa-image fa-3x text-muted"></i>
+                                                    </div>
+                                                <% } %>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        <%= product.name %>
+                                                    </h5>
+                                                    <p class="card-text">
+                                                        <%= product.description %>
+                                                    </p>
+                                                    <p class="card-text"><strong>Price: $<%= product.price %></strong>
+                                                    </p>
+                                                    <% if (product.category) { %>
+                                                        <span class="badge bg-secondary">
+                                                            <%= product.category.name %>
+                                                        </span>
+                                                    <% } %>
+                                                </div>
+                                                <div class="card-footer bg-white">
+                                                    <div class="d-flex justify-content-between">
+                                                        <a href="/api/v1/admin/products/<%= product._id %>/edit" class="btn btn-sm btn-outline-primary">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <form action="/api/v1/admin/products/<%= product._id %>?_method=DELETE" method="POST" class="d-inline">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this product?')">
+                                                                <i class="fas fa-trash"></i> Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle"></i> No products available.
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Categories Tab -->
+                        <div class="tab-pane fade" id="categories" role="tabpanel" aria-labelledby="categories-tab">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <a href="/api/v1/admin/categories/new" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Add New Category
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                                    <% categories.forEach(category => { %>
+                                        <div class="col-md-4 mb-4">
+                                            <div class="card h-100">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        <%= category.name %>
+                                                    </h5>
+                                                    <p class="card-text">
+                                                        <%= category.description || 'No description available' %>
+                                                    </p>
+                                                    <p class="card-text"><small class="text-muted">
+                                                            <%= category.products ? category.products.length : 0 %> products
+                                                        </small></p>
+                                                </div>
+                                                <div class="card-footer bg-white">
+                                                    <div class="d-flex justify-content-between">
+                                                        <a href="/api/v1/admin/categories/<%= category._id %>/products"
+                                                            class="btn btn-sm btn-outline-primary">
+                                                            <i class="fas fa-list"></i> View Products
+                                                        </a>
+                                                        <div>
+                                                            <a href="/api/v1/admin/categories/<%= category._id %>/edit" class="btn btn-sm btn-outline-secondary">
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
+                                                            <form action="/api/v1/admin/categories/<%= category._id %>?_method=DELETE" method="POST" class="d-inline">
+                                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this category?')">
+                                                                    <i class="fas fa-trash"></i> Delete
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle"></i> No categories available.
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Users Tab -->
+                        <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <a href="/api/v1/admin/users/new" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Add New User
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Created At</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (typeof users !== 'undefined' && users.length > 0) { %>
+                                            <% users.forEach(user => { %>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <img src="<%= user.image %>" alt="User Avatar" class="user-avatar me-2">
+                                                            <%= user.name %>
+                                                        </div>
+                                                    </td>
+                                                    <td><%= user.email %></td>
+                                                    <td>
+                                                        <span class="badge <%= user.role === 'admin' ? 'bg-danger' : 'bg-primary' %>">
+                                                            <%= user.role %>
+                                                        </span>
+                                                    </td>
+                                                    <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+                                                    <td>
+                                                        <div class="btn-group" role="group">
+                                                            <a href="/api/v1/admin/users/<%= user._id %>/edit" class="btn btn-sm btn-outline-primary">
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
+                                                            <form action="/api/v1/admin/users/<%= user._id %>?_method=DELETE" method="POST" class="d-inline">
+                                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this user?')">
+                                                                    <i class="fas fa-trash"></i> Delete
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="5" class="text-center">No users available.</td>
+                                            </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <%- include('./partials/footer') %>
+    </main>
+
+    <!-- Scripts -->
+    <%- include('./partials/scripts') %>
+</body>
+</html>

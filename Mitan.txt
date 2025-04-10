@@ -3,16 +3,6 @@ E-commerce Platform Project Outline with JWT, Cookie, Role-Based Access, Multius
 
 
 
-1.  Project Setup (5 points) 
-
-   - Initialize a new Node.js project.
-
-   - Install necessary dependencies: `express`, `ejs`, `body-parser`, `mongoose`, `jsonwebtoken`, `cookie-parser`, etc.
-
-   - Set up a basic server using Express.
-
-
-
 2.  Model - MongoDB Setup (5 points) 
 
    - Set up a MongoDB database to store product data.
