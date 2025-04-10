@@ -1,0 +1,74 @@
+<!-- Static Products Data -->
+<% 
+// Define static data
+const staticProducts = [
+    {
+        name: "Latest Smartphone",
+        description: "High-end smartphone with advanced features and long battery life.",
+        price: 999.99,
+        category: "Electronics",
+        image: "https://via.placeholder.com/300x200",
+        addedBy: "Admin"
+    },
+    {
+        name: "Premium Laptop",
+        description: "Powerful laptop perfect for work and entertainment.",
+        price: 1499.99,
+        category: "Electronics",
+        image: "https://via.placeholder.com/300x200",
+        addedBy: "Admin"
+    },
+    {
+        name: "Wireless Headphones",
+        description: "Noise-cancelling wireless headphones with premium sound quality.",
+        price: 299.99,
+        category: "Electronics",
+        image: "https://via.placeholder.com/300x200",
+        addedBy: "Admin"
+    },
+    {
+        name: "Premium T-Shirt",
+        description: "Comfortable cotton t-shirt with modern design.",
+        price: 29.99,
+        category: "Clothing",
+        image: "https://via.placeholder.com/300x200",
+        addedBy: "Admin"
+    },
+    {
+        name: "Best-Selling Novel",
+        description: "Award-winning novel that topped charts worldwide.",
+        price: 19.99,
+        category: "Books",
+        image: "https://via.placeholder.com/300x200",
+        addedBy: "Admin"
+    },
+    {
+        name: "Smart Coffee Maker",
+        description: "Programmable coffee maker with mobile app control.",
+        price: 79.99,
+        category: "Home & Kitchen",
+        image: "https://via.placeholder.com/300x200",
+        addedBy: "Admin"
+    }
+];
+
+const staticCategories = [
+    { _id: "electronics", name: "Electronics" },
+    { _id: "clothing", name: "Clothing" },
+    { _id: "books", name: "Books" },
+    { _id: "home", name: "Home & Kitchen" }
+];
+
+// Make variables available globally
+if (typeof user === 'undefined') {
+    user = { name: 'John Doe' };
+}
+
+if (typeof products === 'undefined' || !products || products.length === 0) {
+    products = staticProducts;
+}
+
+if (typeof categories === 'undefined' || !categories || categories.length === 0) {
+    categories = staticCategories;
+}
+%> 

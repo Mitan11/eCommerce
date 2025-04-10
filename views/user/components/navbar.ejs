@@ -1,0 +1,51 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/dashboard">
+            <i class="fas fa-shopping-cart"></i> E-commerce
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/products">
+                        <i class="fas fa-box"></i> All Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/my-products">
+                        <i class="fas fa-list"></i> My Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/categories">
+                        <i class="fas fa-tags"></i> Categories
+                    </a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-link text-white dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="<%=user.image%>" 
+                             alt="User Avatar" 
+                             class="rounded-circle me-2" 
+                             style="width: 32px; height: 32px;">
+                        <%= typeof user !== 'undefined' ? user.name : 'User' %>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/api/v1/user/profile"><i class="fas fa-user"></i> Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/api/v1/user/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav> 

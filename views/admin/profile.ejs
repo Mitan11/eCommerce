@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('./partials/header', { title: 'Profile' }) %>
+    <%- include('./components/header', { title: 'Profile' }) %>
     <style>
         .profile-avatar {
             width: 150px;
@@ -37,10 +37,10 @@
     <% const activePage = 'profile'; %>
     
     <!-- Navbar -->
-    <%- include('./partials/navbar', { activePage }) %>
+    <%- include('./components/navbar', { activePage }) %>
 
     <!-- Sidebar -->
-    <%- include('./partials/sidebar', { activePage }) %>
+    <%- include('./components/sidebar', { activePage }) %>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -126,7 +126,7 @@
         </div>
 
         <!-- Footer -->
-        <%- include('./partials/footer') %>
+        <%- include('./components/footer') %>
     </main>
 
     <!-- Change Avatar Modal -->
@@ -157,6 +157,6 @@
     </div>
 
     <!-- Scripts -->
-    <%- include('./partials/scripts') %>
+    <%- include('./components/scripts') %>
 </body>
 </html>
