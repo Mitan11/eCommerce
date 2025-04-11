@@ -4,6 +4,61 @@ const bcrypt = require("bcryptjs");
 const userModel = require("../models/userModel");
 const nodemailer = require("nodemailer");
 
+const profile = (req, res) => {
+    res.render('admin/profile', { user: req.user });
+}
+
+const products = async (req, res) => {
+    try {
+        const products = await productModel.find({}).populate('category');
+        const categories = await categoryModel.find({});
+        res.render('admin/products', { user: req.user, products: products, categories: categories });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const users = async (req, res) => {
+    try {
+        const users = await userModel.find({});
+        res.render('admin/users', { user: req.user, users: users });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const addUserForm = async (req, res) => {
+    res.render('admin/addUser', { user: req.user });
+}
+
+const addProductForm = async (req, res) => {
+    try {
+        const categories = await categoryModel.find({});
+
+        res.render('admin/addProduct', { user: req.user, categories: categories });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const dashboard = async (req, res) => {
+    try {
+        // get all users except admin
+        const users = await userModel.find({});
+        const adminUsers = await userModel.find({ role: 'admin' });
+        const categories = await categoryModel.find({});
+        const products = await productModel.find({}).populate('category');
+
+        res.render('admin/dashboard', { user: req.user, users: users, adminUsers: adminUsers, categories: categories, products: products });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const addCategoryForm = (req, res) => {
+    res.render('admin/addCategory', { user: req.user });
+}
+
 const addCategory = async (req, res) => {
     try {
         const { categoryName, description } = req.body;
@@ -116,5 +171,12 @@ module.exports = {
     addCategory,
     getCategories,
     addProduct,
-    addUser
+    addUser,
+    profile,
+    products,
+    users,
+    addUserForm,
+    addProductForm,
+    dashboard,
+    addCategoryForm,
 }

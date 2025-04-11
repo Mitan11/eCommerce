@@ -19,7 +19,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: 'user'
-    }
+    },
+    products: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    },
 });
 
 const userModel = mongoose.model('User', userSchema);
