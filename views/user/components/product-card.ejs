@@ -1,25 +1,23 @@
 <!-- Product Card -->
 <div class="col-md-4 mb-4">
     <div class="card h-100 product-card">
-        <img src="<%= typeof product.image !== 'undefined' ? product.image : 'https://via.placeholder.com/300x200' %>" 
-             class="card-img-top" 
-             alt="<%= typeof product.name !== 'undefined' ? product.name : 'Product' %>">
+        <img src="<%= typeof product.image !== 'undefined' ? product.image : 'https://via.placeholder.com/300x200' %>"
+            class="card-img-top" alt="<%= typeof product.name !== 'undefined' ? product.name : 'Product' %>">
         <span class="badge bg-primary category-badge">
-            <%= typeof product.category !== 'undefined' ? product.category : 'Uncategorized' %>
+            <%= typeof product.category !=='undefined' ? product.category.categoryName : 'Uncategorized' %>
         </span>
         <div class="card-body">
             <h5 class="card-title">
-                <%= typeof product.name !== 'undefined' ? product.name : 'Product Name' %>
+                <%= typeof product.productName !=='undefined' ? product.productName : 'Product Name' %>
             </h5>
             <p class="card-text">
-                <%= typeof product.description !== 'undefined' ? product.description : 'No description available' %>
+                <%= typeof product.productDescription !=='undefined' ? product.productDescription
+                    : 'No description available' %>
             </p>
             <p class="card-text">
-                <strong>Price: </strong>$<%= typeof product.price !== 'undefined' ? product.price : '0.00' %>
-            </p>
-            <p class="card-text">
-                <small class="text-muted">Added by: <%= typeof product.addedBy !== 'undefined' ? product.addedBy : 'Admin' %></small>
+                <strong>Price: </strong>$<%= typeof product.productPrice !=='undefined' ? product.productPrice : '0.00'
+                    %>
             </p>
         </div>
     </div>
-</div> 
+</div>

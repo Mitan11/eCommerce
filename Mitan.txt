@@ -1,7 +1,3 @@
-5.  Middleware and Routing (10 points) 
-
-   - Define routes for rendering views and handling CRUD operations on products and categories.
-
 
 
 6.  Model - Fetching and Displaying User-Specific Products (10 points) 

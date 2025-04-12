@@ -20,10 +20,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: 'user'
     },
-    products: {
+    products: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
-    },
+    }]
 });
 
 const userModel = mongoose.model('User', userSchema);

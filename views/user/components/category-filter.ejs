@@ -10,7 +10,7 @@
                         <% categories.forEach(category => { %>
                             <a href="/dashboard?category=<%= category._id %>" 
                                class="btn btn-outline-primary">
-                                <%= category.name %>
+                                <%= category.categoryName %>
                             </a>
                         <% }); %>
                     <% } else { %>

@@ -104,6 +104,8 @@ const addProduct = async (req, res) => {
         const product = new productModel({ productName, productDescription, productPrice, category, stock, image });
 
         await product.save();
+        
+        await userModel.findByIdAndUpdate(req.user._id, { $push: { products: product._id } });
 
         res.redirect('/api/v1/admin/products');
 
