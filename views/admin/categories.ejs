@@ -31,7 +31,7 @@
         
         .card-header {
             padding: 1.25rem 1.5rem;
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            background: #0d6efd;
             color: white;
         }
         
@@ -47,46 +47,46 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            /* background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); */
             border: none;
         }
         
         .btn-primary:hover {
-            background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+            /* background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+            /* background: linear-gradient(135deg, #198754 0%, #146c43 100%); */
             border: none;
         }
         
         .btn-success:hover {
-            background: linear-gradient(135deg, #157347 0%, #115c39 100%);
+            /* background: linear-gradient(135deg, #157347 0%, #115c39 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
         }
         
         .btn-danger {
-            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            /* background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); */
             border: none;
         }
         
         .btn-danger:hover {
-            background: linear-gradient(135deg, #bb2d3b 0%, #9a2530 100%);
+            /* background: linear-gradient(135deg, #bb2d3b 0%, #9a2530 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
         }
         
         .btn-warning {
-            background: linear-gradient(135deg, #ffc107 0%, #cc9a06 100%);
+            /* background: linear-gradient(135deg, #ffc107 0%, #cc9a06 100%); */
             border: none;
             color: #212529;
         }
         
         .btn-warning:hover {
-            background: linear-gradient(135deg, #ffca2c 0%, #d4a30c 100%);
+            /* background: linear-gradient(135deg, #ffca2c 0%, #d4a30c 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
             color: #212529;
@@ -208,7 +208,7 @@
                         <p class="text-muted mb-0">Manage your product categories</p>
                     </div>
                     <div class="mt-2 mt-md-0">
-                        <a href="/api/v1/admin/categories/add" class="btn btn-primary">
+                        <a href="/api/v1/admin/addCategory" class="btn btn-primary">
                             <i class="fas fa-plus me-1"></i> Add New Category
                         </a>
                     </div>
@@ -217,27 +217,12 @@
                 <!-- Search and Filter Section -->
                 <div class="card mb-4">
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="search-box">
                                     <i class="fas fa-search search-icon"></i>
                                     <input type="text" class="form-control" id="searchInput" placeholder="Search categories...">
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="statusFilter">
-                                    <option value="all">All Status</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="sortBy">
-                                    <option value="name-asc">Name (A-Z)</option>
-                                    <option value="name-desc">Name (Z-A)</option>
-                                    <option value="products-desc">Most Products</option>
-                                    <option value="products-asc">Least Products</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -285,11 +270,10 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <a href="/api/v1/admin/categories/edit/<%= category._id %>" class="btn btn-sm btn-warning" title="Edit">
+                                                        <a href="/api/v1/admin/category/edit/<%= category._id %>" class="btn btn-sm btn-warning" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-
-                                                        <button type="button" class="btn btn-sm btn-danger" title="Delete" onclick="confirmDelete('<%= category._id %>', '<%= category.name %>')">
+                                                        <button type="button" class="btn btn-sm btn-danger" title="Delete" onclick="confirmDelete('<%= category._id %>', '<%= category.categoryName %>')">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </div>
@@ -306,7 +290,7 @@
                                 </div>
                                 <h4>No Categories Found</h4>
                                 <p>You haven't created any categories yet. Start by adding your first category.</p>
-                                <a href="/api/v1/admin/categories/add" class="btn btn-primary mt-3">
+                                <a href="/admin/categories/add" class="btn btn-primary mt-3">
                                     <i class="fas fa-plus me-1"></i> Add Your First Category
                                 </a>
                             </div>
@@ -339,7 +323,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form id="deleteForm" action="" method="POST" style="display: inline;">
+                    <form id="deleteForm" action="" method="POST" class="d-inline">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-danger">Delete Category</button>
                     </form>
@@ -355,8 +339,8 @@
             const rows = document.querySelectorAll('tbody tr');
             
             rows.forEach(row => {
-                const categoryName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                const categoryDesc = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                const categoryName = row.querySelector('td:nth-child(1) .fw-bold').textContent.toLowerCase();
+                const categoryDesc = row.querySelector('td:nth-child(2) .text-truncate').textContent.toLowerCase();
                 
                 if (categoryName.includes(searchTerm) || categoryDesc.includes(searchTerm)) {
                     row.style.display = '';
@@ -366,63 +350,10 @@
             });
         });
         
-        // Status filter
-        document.getElementById('statusFilter').addEventListener('change', function() {
-            const status = this.value;
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const statusCell = row.querySelector('td:nth-child(5)');
-                const isActive = statusCell.querySelector('.status-active') !== null;
-                
-                if (status === 'all' || 
-                    (status === 'active' && isActive) || 
-                    (status === 'inactive' && !isActive)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-        
-        // Sort functionality
-        document.getElementById('sortBy').addEventListener('change', function() {
-            const sortValue = this.value;
-            const tbody = document.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            
-            rows.sort((a, b) => {
-                if (sortValue === 'name-asc') {
-                    return a.querySelector('td:nth-child(2)').textContent.localeCompare(b.querySelector('td:nth-child(2)').textContent);
-                } else if (sortValue === 'name-desc') {
-                    return b.querySelector('td:nth-child(2)').textContent.localeCompare(a.querySelector('td:nth-child(2)').textContent);
-                } else if (sortValue === 'products-desc') {
-                    const aCount = parseInt(a.querySelector('td:nth-child(4) .badge').textContent);
-                    const bCount = parseInt(b.querySelector('td:nth-child(4) .badge').textContent);
-                    return bCount - aCount;
-                } else if (sortValue === 'products-asc') {
-                    const aCount = parseInt(a.querySelector('td:nth-child(4) .badge').textContent);
-                    const bCount = parseInt(b.querySelector('td:nth-child(4) .badge').textContent);
-                    return aCount - bCount;
-                }
-                return 0;
-            });
-            
-            // Clear the tbody
-            while (tbody.firstChild) {
-                tbody.removeChild(tbody.firstChild);
-            }
-            
-            // Add the sorted rows back
-            rows.forEach(row => {
-                tbody.appendChild(row);
-            });
-        });
-        
         // Delete confirmation
         function confirmDelete(categoryId, categoryName) {
             document.getElementById('categoryNameToDelete').textContent = categoryName;
-            document.getElementById('deleteForm').action = `/api/v1/admin/categories/delete/${categoryId}`;
+            document.getElementById('deleteForm').action = `/api/v1/admin/category/delete/${categoryId}`;
             
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
             deleteModal.show();

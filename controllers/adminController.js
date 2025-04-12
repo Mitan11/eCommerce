@@ -167,6 +167,202 @@ const addUser = async (req, res) => {
     }
 }
 
+const deleteProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        await productModel.findByIdAndDelete(id);
+
+        res.redirect('/api/v1/admin/products');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const editProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await productModel.findById(id);
+        const categories = await categoryModel.find({});
+        res.render('admin/editProduct', { user: req.user, product: product, categories: categories });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { productName, productDescription, productPrice, category, stock } = req.body;
+
+        // Create update object with required fields
+        const updateData = { productName, productDescription, productPrice, category, stock };
+
+        // Only update image if a new one was uploaded
+        if (req.file && req.file.filename) {
+            updateData.image = req.file.filename;
+        }
+
+        // Update the product
+        await productModel.findByIdAndUpdate(id, updateData);
+
+        res.redirect('/api/v1/admin/products');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const editCategory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const category = await categoryModel.findById(id);
+        res.render('admin/editCategory', { user: req.user, category: category });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const updateCategory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { categoryName, description } = req.body;
+
+        if (!categoryName || !description) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        const updateData = {
+            categoryName,
+            description,
+        };
+
+        await categoryModel.findByIdAndUpdate(id, updateData);
+
+        res.redirect('/api/v1/admin/categories');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const deleteCategory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await categoryModel.findByIdAndDelete(id);
+        res.redirect('/api/v1/admin/categories');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await userModel.findByIdAndDelete(id);
+        res.redirect('/api/v1/admin/users');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const editUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await userModel.findById(id);
+        res.render('admin/editUser', { user: req.user, user: user });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, email, password, role } = req.body;
+
+        if (!name || !email || !password || !role) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const updateData = { name, email, password: hashedPassword, role };
+
+        if (req.file && req.file.filename) {
+            updateData.image = req.file.filename;
+        }
+
+        await userModel.findByIdAndUpdate(id, updateData);
+        res.redirect('/api/v1/admin/users');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const getProductsByCategory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const category = await categoryModel.findById(id);
+        const products = await productModel.find({ category: id });
+        res.render('admin/productsByCategory', { user: req.user, products: products, category: category });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const updateProfile = async (req, res) => {
+    try {
+        const { name, email } = req.body;
+
+        if (!name || !email) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        await userModel.findByIdAndUpdate(req.user._id, { name, email });
+        res.redirect('/api/v1/admin/profile');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const updatePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword, confirmPassword } = req.body;
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ message: 'New password and confirm password do not match' });
+        }
+
+
+        if (currentPassword === newPassword) {
+            return res.status(400).json({ message: 'New password cannot be the same as the current password' });
+        }
+
+        const user = await userModel.findById(req.user._id);
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Current password is incorrect' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        await userModel.findByIdAndUpdate(req.user._id, { password: hashedPassword });
+        res.redirect('/api/v1/admin/profile');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     addCategory,
     getCategories,
@@ -179,4 +375,16 @@ module.exports = {
     addProductForm,
     dashboard,
     addCategoryForm,
+    deleteProduct,
+    editProduct,
+    updateProduct,
+    editCategory,
+    updateCategory,
+    deleteCategory,
+    deleteUser,
+    editUser,
+    updateUser,
+    getProductsByCategory,
+    updateProfile,
+    updatePassword
 }

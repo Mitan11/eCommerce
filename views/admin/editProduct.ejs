@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <%- include('./components/header', { title: 'Edit Product' }) %>
+    <style>
+        .main-content {
+            margin-top: 60px; /* Space for fixed navbar */
+            padding-top: 20px;
+        }
+        
+        .page-header {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+        }
+        
+        .btn-outline-secondary {
+            border: 1px solid #6c757d;
+            color: #6c757d;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ced4da;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        
+        .image-upload-container {
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #f8f9fa;
+        }
+        
+        .image-upload-container:hover {
+            border-color: #0d6efd;
+            background-color: #f1f5ff;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .image-preview-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(220, 53, 69, 0.8);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .remove-image:hover {
+            background-color: #dc3545;
+        }
+        
+        /* Fix for screen overflow */
+        .container-fluid {
+            max-width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        
+        .row {
+            margin-right: 0;
+            margin-left: 0;
+        }
+        
+        .col-md-9, .col-lg-10 {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        @media (min-width: 768px) {
+            .page-header {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Include Navbar -->
+    <%- include('./components/navbar', { user: user, activePage: 'products' }) %>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include Sidebar -->
+            <%- include('./components/sidebar', { activePage: 'products' }) %>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 main-content">
+                <div class="page-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h2 mb-0">Edit Product</h1>
+                        <p class="text-muted mb-0">Update product information</p>
+                    </div>
+                    <div class="mt-2 mt-md-0">
+                        <a href="/api/v1/admin/products" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Products
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Product Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/api/v1/admin/product/update/<%= product._id %>" method="POST" enctype="multipart/form-data">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="productName" class="form-label">Product Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="category" name="category" required>
+                                            <option value="">Select a category</option>
+                                            <% if (categories && categories.length > 0) { %>
+                                                <% categories.forEach(category => { %>
+                                                    <option value="<%= category._id %>" <%= product.category._id.toString() === category._id.toString() ? 'selected' : '' %>>
+                                                        <%= category.categoryName %>
+                                                    </option>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <option value="<%= product.category._id %>" selected>
+                                                    <%= product.category.categoryName %>
+                                                </option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="productDescription" class="form-label">Product Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="productDescription" name="productDescription" rows="4" required><%= product.productDescription %></textarea>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="productPrice" class="form-label">Price ($) <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="productPrice" name="productPrice" value="<%= product.productPrice %>" min="0" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="stock" class="form-label">Stock <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="stock" name="stock" value="<%= product.stock %>" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Product Image</label>
+                                <div class="image-upload-container" id="imageUploadContainer">
+                                    <input type="file" id="image" name="image" class="d-none" accept="image/*">
+                                    <div id="uploadIcon">
+                                        <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                                        <p class="mb-0">Drag and drop an image here or click to browse</p>
+                                        <small class="text-muted">Recommended size: 800x800px, max 2MB</small>
+                                        <small class="text-muted d-block mt-1">(Optional - leave empty to keep current image)</small>
+                                    </div>
+                                    <div id="imagePreviewContainer" class="d-none">
+                                        <div class="image-preview-container">
+                                            <img id="imagePreview" class="image-preview" src="" alt="Product image preview">
+                                            <div class="remove-image" id="removeImage">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% if (product.image) { %>
+                                    <div class="mt-3">
+                                        <p class="mb-2">Current Image:</p>
+                                        <div class="image-preview-container">
+                                            <img src="/images/uploads/<%= product.image %>" alt="Current product image" class="image-preview">
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i> Update Product
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+    <%- include('./components/footer') %>
+
+    <!-- Include Scripts -->
+    <%- include('./components/scripts') %>
+    
+    <script>
+        // Image upload functionality
+        const imageUploadContainer = document.getElementById('imageUploadContainer');
+        const imageInput = document.getElementById('image');
+        const uploadIcon = document.getElementById('uploadIcon');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const removeImage = document.getElementById('removeImage');
+        
+        // Click on container to trigger file input
+        imageUploadContainer.addEventListener('click', function(e) {
+            // Only trigger if clicking directly on the container or its children (not the remove button)
+            if (e.target === imageUploadContainer || e.target === uploadIcon || e.target.parentNode === uploadIcon) {
+                imageInput.click();
+            }
+        });
+        
+        // Handle file selection
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    uploadIcon.classList.add('d-none');
+                    imagePreviewContainer.classList.remove('d-none');
+                };
+                
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        
+        // Remove selected image
+        removeImage.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent triggering the container click
+            imageInput.value = '';
+            imagePreview.src = '';
+            uploadIcon.classList.remove('d-none');
+            imagePreviewContainer.classList.add('d-none');
+        });
+        
+        // Drag and drop functionality
+        imageUploadContainer.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#0d6efd';
+            this.style.backgroundColor = '#f1f5ff';
+        });
+        
+        imageUploadContainer.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ced4da';
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        
+        imageUploadContainer.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ced4da';
+            this.style.backgroundColor = '#f8f9fa';
+            
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                imageInput.files = e.dataTransfer.files;
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    uploadIcon.classList.add('d-none');
+                    imagePreviewContainer.classList.remove('d-none');
+                };
+                
+                reader.readAsDataURL(e.dataTransfer.files[0]);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Category - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <%- include('./components/header', { title: 'Edit Category' }) %>
+    <style>
+        .main-content {
+            margin-top: 60px;
+            padding-top: 20px;
+        }
+        
+        .page-header {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            background: #0d6efd;
+            color: white;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            background: #5c636a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        }
+        
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .image-preview.show {
+            display: block;
+        }
+        
+        .image-upload {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .image-upload:hover {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+        
+        .image-upload i {
+            font-size: 2rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+        
+        .form-text {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        
+        .required-field::after {
+            content: "*";
+            color: #dc3545;
+            margin-left: 4px;
+        }
+        
+        .container-fluid {
+            max-width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        
+        .row {
+            margin-right: 0;
+            margin-left: 0;
+        }
+        
+        .col-md-9, .col-lg-10 {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        @media (min-width: 768px) {
+            .page-header {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Include Navbar -->
+    <%- include('./components/navbar', { user: user, activePage: 'categories' }) %>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Include Sidebar -->
+            <%- include('./components/sidebar', { activePage: 'categories' }) %>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 main-content">
+                <div class="page-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h2 mb-0">Edit Category</h1>
+                        <p class="text-muted mb-0">Update category information</p>
+                    </div>
+                    <div class="mt-2 mt-md-0">
+                        <a href="/admin/categories" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Categories
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Category Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/api/v1/admin/category/update/<%= category._id %>" method="POST">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="categoryName" class="form-label required-field">Category Name</label>
+                                        <input type="text" class="form-control" id="categoryName" name="categoryName" value="<%= category.categoryName %>" required>
+                                        <div class="form-text">Enter a descriptive name for the category</div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" name="description" rows="4"><%= category.description %></textarea>
+                                        <div class="form-text">Provide a detailed description of the category</div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='/admin/categories'">Cancel</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+    <%- include('./components/footer') %>
+
+    <!-- Include Scripts -->
+    <%- include('./components/scripts') %>
+    
+    <script>
+        // Auto-generate slug from category name
+        document.getElementById('categoryName').addEventListener('input', function() {
+            const slug = this.value
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '');
+            document.getElementById('slug').value = slug;
+        });
+        
+        // Image upload preview
+        const imageUpload = document.getElementById('imageUpload');
+        const imageInput = document.getElementById('image');
+        const imagePreview = document.getElementById('imagePreview');
+        const removeImageBtn = document.getElementById('removeImage');
+        
+        imageUpload.addEventListener('click', () => imageInput.click());
+        
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.add('show');
+                    removeImageBtn.style.display = 'block';
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        
+        removeImageBtn.addEventListener('click', function() {
+            imageInput.value = '';
+            imagePreview.src = '';
+            imagePreview.classList.remove('show');
+            this.style.display = 'none';
+        });
+        
+        // Show image preview if category has an image
+        if (imagePreview.src) {
+            imagePreview.classList.add('show');
+            removeImageBtn.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

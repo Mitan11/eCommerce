@@ -192,10 +192,10 @@
                                                 </div>
                                                 <div class="card-footer bg-white">
                                                     <div class="d-flex justify-content-between">
-                                                        <a href="/api/v1/admin/products/<%= product._id %>/edit" class="btn btn-sm btn-outline-primary">
+                                                        <a href="/api/v1/admin/product/edit/<%= product._id %>" class="btn btn-sm btn-outline-primary">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
-                                                        <form action="/api/v1/admin/products/<%= product._id %>?_method=DELETE" method="POST" class="d-inline">
+                                                        <form action="/api/v1/admin/product/delete/<%= product._id %>" method="POST" class="d-inline">
                                                             <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this product?')">
                                                                 <i class="fas fa-trash"></i> Delete
                                                             </button>
@@ -242,15 +242,15 @@
                                                 </div>
                                                 <div class="card-footer bg-white">
                                                     <div class="d-flex justify-content-between">
-                                                        <a href="/api/v1/admin/categories/<%= category._id %>/products"
+                                                        <a href="/api/v1/admin/category/products/<%= category._id %>"
                                                             class="btn btn-sm btn-outline-primary">
                                                             <i class="fas fa-list"></i> View Products
                                                         </a>
                                                         <div>
-                                                            <a href="/api/v1/admin/categories/<%= category._id %>/edit" class="btn btn-sm btn-outline-secondary">
+                                                            <a href="/api/v1/admin/category/edit/<%= category._id %>" class="btn btn-sm btn-outline-secondary">
                                                                 <i class="fas fa-edit"></i> Edit
                                                             </a>
-                                                            <form action="/api/v1/admin/categories/<%= category._id %>?_method=DELETE" method="POST" class="d-inline">
+                                                            <form action="/api/v1/admin/category/delete/<%= category._id %>" method="POST" class="d-inline">
                                                                 <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this category?')">
                                                                     <i class="fas fa-trash"></i> Delete
                                                                 </button>
@@ -275,7 +275,7 @@
                         <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <a href="/api/v1/admin/users/new" class="btn btn-primary">
+                                    <a href="/api/v1/admin/addUser" class="btn btn-primary">
                                         <i class="fas fa-plus"></i> Add New User
                                     </a>
                                 </div>
@@ -309,10 +309,10 @@
                                                     </td>
                                                     <td>
                                                         <div class="btn-group" role="group">
-                                                            <a href="/api/v1/admin/users/<%= item._id %>/edit" class="btn btn-sm btn-outline-primary me-2">
+                                                            <a href="/api/v1/admin/user/edit/<%= item._id %>" class="btn btn-sm btn-outline-primary me-2">
                                                                 <i class="fas fa-edit"></i> Edit
                                                             </a>
-                                                            <form action="/api/v1/admin/users/<%= item._id %>?_method=DELETE" method="POST" class="d-inline">
+                                                            <form action="/api/v1/admin/user/delete/<%= item._id %>" method="POST" class="d-inline">
                                                                 <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this user?')">
                                                                     <i class="fas fa-trash"></i> Delete
                                                                 </button>

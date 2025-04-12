@@ -31,7 +31,7 @@
         
         .card-header {
             padding: 1.25rem 1.5rem;
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            background: #0d6efd;
             color: white;
         }
         
@@ -47,46 +47,46 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            /* background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); */
             border: none;
         }
         
         .btn-primary:hover {
-            background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+            /* background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+            /* background: linear-gradient(135deg, #198754 0%, #146c43 100%); */
             border: none;
         }
         
         .btn-success:hover {
-            background: linear-gradient(135deg, #157347 0%, #115c39 100%);
+            /* background: linear-gradient(135deg, #157347 0%, #115c39 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
         }
         
         .btn-danger {
-            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            /* background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); */
             border: none;
         }
         
         .btn-danger:hover {
-            background: linear-gradient(135deg, #bb2d3b 0%, #9a2530 100%);
+            /* background: linear-gradient(135deg, #bb2d3b 0%, #9a2530 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
         }
         
         .btn-warning {
-            background: linear-gradient(135deg, #ffc107 0%, #cc9a06 100%);
+            /* background: linear-gradient(135deg, #ffc107 0%, #cc9a06 100%); */
             border: none;
             color: #212529;
         }
         
         .btn-warning:hover {
-            background: linear-gradient(135deg, #ffca2c 0%, #d4a30c 100%);
+            /* background: linear-gradient(135deg, #ffca2c 0%, #d4a30c 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
             color: #212529;
@@ -226,30 +226,12 @@
                 <!-- Search and Filter Section -->
                 <div class="card mb-4">
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="search-box">
                                     <i class="fas fa-search search-icon"></i>
                                     <input type="text" class="form-control" id="searchInput" placeholder="Search products...">
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="categoryFilter">
-                                    <option value="all">All Categories</option>
-                                    <% if (categories && categories.length > 0) { %>
-                                        <% categories.forEach(category => { %>
-                                            <option value="<%= category._id %>"><%= category.categoryName %></option>
-                                        <% }); %>
-                                    <% } %>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="stockFilter">
-                                    <option value="all">All Stock Status</option>
-                                    <option value="in">In Stock</option>
-                                    <option value="low">Low Stock</option>
-                                    <option value="out">Out of Stock</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -310,10 +292,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <a href="/api/v1/admin/products/<%= product._id %>" class="btn btn-sm btn-info" title="View">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <a href="/api/v1/admin/products/edit/<%= product._id %>" class="btn btn-sm btn-warning" title="Edit">
+                                                        <a href="/api/v1/admin/product/edit/<%= product._id %>" class="btn btn-sm btn-warning" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                         <button type="button" class="btn btn-sm btn-danger" title="Delete" onclick="confirmDelete('<%= product._id %>', '<%= product.productName %>')">
@@ -366,9 +345,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form id="deleteForm" action="" method="POST" style="display: inline;">
+                    <form id="deleteForm" action="" method="POST" class="d-inline">
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-danger">Delete Product</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
             </div>
@@ -393,49 +372,10 @@
             });
         });
         
-        // Category filter
-        document.getElementById('categoryFilter').addEventListener('change', function() {
-            const category = this.value;
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const productCategory = row.querySelector('td:nth-child(3)').textContent.trim();
-                
-                if (category === 'all' || productCategory === category) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-        
-        // Stock filter
-        document.getElementById('stockFilter').addEventListener('change', function() {
-            const stockStatus = this.value;
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const stockCell = row.querySelector('td:nth-child(5)');
-                const stockBadge = stockCell.querySelector('.stock-badge');
-                
-                if (stockStatus === 'all') {
-                    row.style.display = '';
-                } else if (stockStatus === 'in' && stockBadge.classList.contains('stock-in')) {
-                    row.style.display = '';
-                } else if (stockStatus === 'low' && stockBadge.classList.contains('stock-low')) {
-                    row.style.display = '';
-                } else if (stockStatus === 'out' && stockBadge.classList.contains('stock-out')) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-        
         // Delete confirmation
         function confirmDelete(productId, productName) {
             document.getElementById('productNameToDelete').textContent = productName;
-            document.getElementById('deleteForm').action = `/api/v1/admin/products/delete/${productId}`;
+            document.getElementById('deleteForm').action = `/admin/product/delete/${productId}`;
             
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
             deleteModal.show();

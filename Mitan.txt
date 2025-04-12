@@ -1,13 +1,6 @@
-Node Js Practical Exam
-E-commerce Platform Project Outline with JWT, Cookie, Role-Based Access, Multiuser Support, Populate, Navbar, and MVC Pattern (Within 50 points)
-
-
-
 5.  Middleware and Routing (10 points) 
 
    - Define routes for rendering views and handling CRUD operations on products and categories.
-
-   - Ensure that routes are protected based on user roles.
 
 
 
@@ -55,8 +48,4 @@ E-commerce Platform Project Outline with JWT, Cookie, Role-Based Access, Multius
 
 9.  Navbar (5 points) 
 
-   - Create a `navbar.ejs` partial for navigation.
-
    - Include links to the product list, user-specific products, category list, product form, and a sign-out option (if applicable).
-
-   - Ensure the navbar is responsive and visually appealing.

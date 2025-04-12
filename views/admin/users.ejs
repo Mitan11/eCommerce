@@ -31,7 +31,7 @@
         
         .card-header {
             padding: 1.25rem 1.5rem;
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            background: #0d6efd;
             color: white;
         }
         
@@ -47,54 +47,54 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            /* background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); */
             border: none;
         }
         
         .btn-primary:hover {
-            background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+            /* background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+            /* background: linear-gradient(135deg, #198754 0%, #146c43 100%); */
             border: none;
         }
         
         .btn-success:hover {
-            background: linear-gradient(135deg, #157347 0%, #115c39 100%);
+            /* background: linear-gradient(135deg, #157347 0%, #115c39 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
         }
         
         .btn-danger {
-            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            /* background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); */
             border: none;
         }
         
         .btn-danger:hover {
-            background: linear-gradient(135deg, #bb2d3b 0%, #9a2530 100%);
+            /* background: linear-gradient(135deg, #bb2d3b 0%, #9a2530 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
         }
         
         .btn-warning {
-            background: linear-gradient(135deg, #ffc107 0%, #cc9a06 100%);
+            /* background: linear-gradient(135deg, #ffc107 0%, #cc9a06 100%); */
             border: none;
             color: #212529;
         }
         
         .btn-warning:hover {
-            background: linear-gradient(135deg, #ffca2c 0%, #d4a30c 100%);
+            /* background: linear-gradient(135deg, #ffca2c 0%, #d4a30c 100%); */
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
             color: #212529;
         }
         
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            /* width: 40px;
+            height: 40px; */
             border-radius: 50%;
             object-fit: cover;
         }
@@ -235,7 +235,7 @@
                         <a href="/api/v1/admin/dashboard" class="btn btn-outline-secondary me-2">
                             <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
                         </a>
-                        <a href="/api/v1/admin/users/add" class="btn btn-primary">
+                        <a href="/api/v1/admin/addUser" class="btn btn-primary">
                             <i class="fas fa-user-plus me-1"></i> Add New User
                         </a>
                     </div>
@@ -245,25 +245,17 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <div class="search-box">
                                     <i class="fas fa-search search-icon"></i>
                                     <input type="text" class="form-control" id="searchInput" placeholder="Search users...">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <select class="form-select" id="roleFilter">
                                     <option value="all">All Roles</option>
                                     <option value="admin">Admin</option>
                                     <option value="user">User</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="statusFilter">
-                                    <option value="all">All Status</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                    <option value="pending">Pending</option>
                                 </select>
                             </div>
                         </div>
@@ -316,10 +308,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <a href="/api/v1/admin/users/<%= item._id %>" class="btn btn-sm btn-info" title="View">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <a href="/api/v1/admin/users/edit/<%= item._id %>" class="btn btn-sm btn-warning" title="Edit">
+                                                        <a href="/api/v1/admin/user/edit/<%= item._id %>" class="btn btn-sm btn-warning" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                         <button type="button" class="btn btn-sm btn-danger" title="Delete" onclick="confirmDelete('<%= item._id %>', '<%= item.name %>')">
@@ -340,7 +329,7 @@
                                 </div>
                                 <h4>No Users Found</h4>
                                 <p>There are no users registered in the system yet.</p>
-                                <a href="/api/v1/admin/users/add" class="btn btn-primary mt-3">
+                                <a href="/api/v1/admin/addUser" class="btn btn-primary mt-3">
                                     <i class="fas fa-user-plus me-1"></i> Add Your First User
                                 </a>
                             </div>
@@ -421,33 +410,10 @@
             });
         });
         
-        // Status filter
-        document.getElementById('statusFilter').addEventListener('change', function() {
-            const status = this.value;
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const statusCell = row.querySelector('td:nth-child(5)');
-                const statusBadge = statusCell.querySelector('.status-badge');
-                
-                if (status === 'all') {
-                    row.style.display = '';
-                } else if (status === 'active' && statusBadge.classList.contains('status-active')) {
-                    row.style.display = '';
-                } else if (status === 'inactive' && statusBadge.classList.contains('status-inactive')) {
-                    row.style.display = '';
-                } else if (status === 'pending' && statusBadge.classList.contains('status-pending')) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-        
         // Delete confirmation
         function confirmDelete(userId, userName) {
             document.getElementById('userNameToDelete').textContent = userName;
-            document.getElementById('deleteForm').action = `/api/v1/admin/users/delete/${userId}`;
+            document.getElementById('deleteForm').action = `/api/v1/admin/user/delete/${userId}`;
             
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
             deleteModal.show();
