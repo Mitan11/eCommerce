@@ -43,7 +43,6 @@ const addProductForm = async (req, res) => {
 
 const dashboard = async (req, res) => {
     try {
-        // get all users except admin
         const users = await userModel.find({});
         const adminUsers = await userModel.find({ role: 'admin' });
         const categories = await categoryModel.find({});
@@ -197,15 +196,12 @@ const updateProduct = async (req, res) => {
         const { id } = req.params;
         const { productName, productDescription, productPrice, category, stock } = req.body;
 
-        // Create update object with required fields
         const updateData = { productName, productDescription, productPrice, category, stock };
 
-        // Only update image if a new one was uploaded
         if (req.file && req.file.filename) {
             updateData.image = req.file.filename;
         }
 
-        // Update the product
         await productModel.findByIdAndUpdate(id, updateData);
 
         res.redirect('/api/v1/admin/products');

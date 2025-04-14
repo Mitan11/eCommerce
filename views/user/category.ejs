@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= category.categoryName %> - E-Commerce</title>
+    <%- include('./components/styles') %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .product-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .product-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        .price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+        }
+        .filter-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px 0;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        .category-header {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .category-image {
+            max-height: 150px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <%- include('./components/navbar', { user: user }) %>
+
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/api/v1/user/dashboard">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/api/v1/user/categories">Categories</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><%= category.categoryName %></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Category Header -->
+        <div class="category-header">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-3 mb-md-0">
+                    <% if (category.image) { %>
+                        <img src="/uploads/<%= category.image %>" class="category-image" alt="<%= category.categoryName %>">
+                    <% } else { %>
+                        <div class="category-image bg-light d-flex align-items-center justify-content-center mx-auto">
+                            <i class="fas fa-folder fa-3x text-muted"></i>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="col-md-9">
+                    <h1 class="mb-2"><%= category.categoryName %></h1>
+                    <% if (category.parentCategory) { %>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-level-up-alt me-1"></i> 
+                            Parent Category: <a href="/api/v1/user/category/<%= category.parentCategory._id %>"><%= category.parentCategory.categoryName %></a>
+                        </p>
+                    <% } %>
+                    <% if (category.description) { %>
+                        <p class="mb-2"><%= category.description %></p>
+                    <% } %>
+                    <p class="mb-0">
+                        <span class="badge bg-primary me-2"><%= products.length %> Products</span>
+                        <% if (category.displayOrder !== undefined) { %>
+                            <span class="badge bg-secondary">Display Order: <%= category.displayOrder %></span>
+                        <% } %>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Filters Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="filter-section">
+                    <h5 class="mb-3">Filters</h5>
+                    
+                    <!-- Search -->
+                    <div class="mb-3">
+                        <label for="searchInput" class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search products...">
+                    </div>
+                    
+                    <!-- Price Range -->
+                    <div class="mb-3">
+                        <label class="form-label">Price Range</label>
+                        <div class="d-flex gap-2">
+                            <input type="number" class="form-control" id="minPrice" placeholder="Min">
+                            <input type="number" class="form-control" id="maxPrice" placeholder="Max">
+                        </div>
+                    </div>
+                    
+                    <!-- Stock Status -->
+                    <div class="mb-3">
+                        <label class="form-label">Stock Status</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inStock" checked>
+                            <label class="form-check-label" for="inStock">In Stock</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="lowStock">
+                            <label class="form-check-label" for="lowStock">Low Stock</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="outOfStock">
+                            <label class="form-check-label" for="outOfStock">Out of Stock</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Clear Filters Button -->
+                    <button class="btn btn-outline-secondary w-100" id="clearFilters">Clear Filters</button>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="col-lg-9">
+                <!-- Product Count -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <span class="text-muted">Showing <span id="productCount"><%= products.length %></span> products</span>
+                    </div>
+                </div>
+                
+                <!-- Products Grid -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productsGrid">
+                    <% if (products && products.length > 0) { %>
+                        <% products.forEach(product => { %>
+                            <div class="col product-item" 
+                                data-price="<%= product.productPrice %>"
+                                data-stock="<%= product.stock %>"
+                                data-name="<%= product.productName.toLowerCase() %>">
+                                <div class="card h-100 product-card">
+                                    <!-- Stock Badge -->
+                                    <% if (product.stock <= 0) { %>
+                                        <span class="badge bg-danger stock-badge">Out of Stock</span>
+                                    <% } else if (product.stock <= 5) { %>
+                                        <span class="badge bg-warning stock-badge">Low Stock</span>
+                                    <% } else { %>
+                                        <span class="badge bg-success stock-badge">In Stock</span>
+                                    <% } %>
+                                    
+                                    <!-- Product Image -->
+                                    <img src="/uploads/<%= product.image %>" class="card-img-top product-image" alt="<%= product.productName %>">
+                                    
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title"><%= product.productName %></h5>
+                                        <p class="card-text text-truncate"><%= product.productDescription %></p>
+                                        <div class="mt-auto">
+                                            <p class="price mb-2">₹<%= typeof product.productPrice === 'number' ? product.productPrice.toFixed(2) : product.productPrice %></p>
+                                            <div class="d-grid gap-2">
+                                                <a href="/api/v1/user/product/<%= product._id %>" class="btn btn-primary">View Details</a>
+                                                <% if (product.stock > 0) { %>
+                                                    <button class="btn btn-outline-success add-to-cart" data-product-id="<%= product._id %>">
+                                                        <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                                                    </button>
+                                                <% } else { %>
+                                                    <button class="btn btn-outline-secondary" disabled>
+                                                        <i class="fas fa-ban me-1"></i> Out of Stock
+                                                    </button>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="col-12">
+                            <div class="empty-state">
+                                <i class="fas fa-box-open"></i>
+                                <h3>No Products Found</h3>
+                                <p class="text-muted">There are no products in this category yet.</p>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('./components/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all filter elements
+            const searchInput = document.getElementById('searchInput');
+            const minPrice = document.getElementById('minPrice');
+            const maxPrice = document.getElementById('maxPrice');
+            const inStockCheckbox = document.getElementById('inStock');
+            const lowStockCheckbox = document.getElementById('lowStock');
+            const outOfStockCheckbox = document.getElementById('outOfStock');
+            const clearFiltersBtn = document.getElementById('clearFilters');
+            const productsGrid = document.getElementById('productsGrid');
+            const productItems = document.querySelectorAll('.product-item');
+            const productCount = document.getElementById('productCount');
+            
+            // Function to filter products
+            function filterProducts() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const minPriceValue = minPrice.value ? parseFloat(minPrice.value) : 0;
+                const maxPriceValue = maxPrice.value ? parseFloat(maxPrice.value) : Infinity;
+                const showInStock = inStockCheckbox.checked;
+                const showLowStock = lowStockCheckbox.checked;
+                const showOutOfStock = outOfStockCheckbox.checked;
+                
+                let visibleCount = 0;
+                
+                productItems.forEach(item => {
+                    const productName = item.getAttribute('data-name');
+                    const productPrice = parseFloat(item.getAttribute('data-price'));
+                    const productStock = parseInt(item.getAttribute('data-stock'));
+                    
+                    // Check if product matches search term
+                    const matchesSearch = productName.includes(searchTerm);
+                    
+                    // Check if product matches price range
+                    const matchesPrice = productPrice >= minPriceValue && productPrice <= maxPriceValue;
+                    
+                    // Check if product matches stock filter
+                    let matchesStock = false;
+                    if (productStock > 5 && showInStock) matchesStock = true;
+                    if (productStock > 0 && productStock <= 5 && showLowStock) matchesStock = true;
+                    if (productStock <= 0 && showOutOfStock) matchesStock = true;
+                    
+                    // Show/hide product based on filters
+                    if (matchesSearch && matchesPrice && matchesStock) {
+                        item.style.display = '';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Update product count
+                productCount.textContent = visibleCount;
+                
+                // Show empty state if no products are visible
+                const emptyState = document.querySelector('.empty-state');
+                if (emptyState) {
+                    if (visibleCount === 0) {
+                        emptyState.style.display = 'block';
+                    } else {
+                        emptyState.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Add event listeners
+            searchInput.addEventListener('input', filterProducts);
+            minPrice.addEventListener('input', filterProducts);
+            maxPrice.addEventListener('input', filterProducts);
+            inStockCheckbox.addEventListener('change', filterProducts);
+            lowStockCheckbox.addEventListener('change', filterProducts);
+            outOfStockCheckbox.addEventListener('change', filterProducts);
+            
+            // Clear filters
+            clearFiltersBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                minPrice.value = '';
+                maxPrice.value = '';
+                inStockCheckbox.checked = true;
+                lowStockCheckbox.checked = false;
+                outOfStockCheckbox.checked = false;
+                
+                filterProducts();
+            });
+            
+            // Add to cart functionality
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    // Here you would typically make an API call to add the product to cart
+                    alert('Product added to cart!');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

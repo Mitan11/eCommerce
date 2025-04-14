@@ -6,7 +6,7 @@ const register = async (req, res) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
 
-        // Validate input
+        
         if (!name || !email || !password || !confirmPassword) {
             return res.status(400).json({
                 status: "fail",
@@ -14,7 +14,7 @@ const register = async (req, res) => {
             });
         }
 
-        // Check if user already exists
+        
         const existUser = await userModel.findOne({ email });
 
         if (existUser) {
@@ -24,7 +24,7 @@ const register = async (req, res) => {
             });
         }
 
-        // Check if passwords match
+        
         if (password !== confirmPassword) {
             return res.status(400).json({
                 status: "fail",
@@ -32,7 +32,7 @@ const register = async (req, res) => {
             });
         }
 
-        // Password length check
+        
         if (password.length < 6) {
             return res.status(400).json({
                 status: "fail",
@@ -40,27 +40,20 @@ const register = async (req, res) => {
             });
         }
 
-        // Hash password
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Save user to database
+        
         const user = await userModel.create({
             name,
             email,
             password: hashedPassword,
         });
 
-        // Redirect after successful registration
+        
         res.redirect("/");
 
-        // Optional JSON response (for API usage)
-        // res.status(201).json({
-        //     status: "success",
-        //     data: {
-        //         user,
-        //     },
-        // });
 
     } catch (error) {
         console.error("Register error:", error);
@@ -77,7 +70,6 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Validate input
         if (!email || !password) {
             return res.status(400).json({
                 status: "fail",
@@ -85,7 +77,7 @@ const login = async (req, res) => {
             });
         }
 
-        // Check if user exists
+        
         const user = await userModel.findOne({ email });
 
         if (!user) {
@@ -95,7 +87,7 @@ const login = async (req, res) => {
             });
         }
 
-        // Compare passwords
+
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
@@ -111,23 +103,16 @@ const login = async (req, res) => {
             process.env.JWT_SECRET,
         );
 
-        // Set token in cookie
+    
         res.cookie("jwt", token);
 
-        // Redirect after successful login
         if (user.role === 'admin') {
             res.redirect("/api/v1/admin/dashboard");
         } else {
             res.redirect("/api/v1/user/dashboard");
         }
 
-        // res.status(200).json({
-        //     status: "success",
-        //     message: "Login successful",
-        //     data: {
-        //         user,
-        //     },
-        // });
+        
 
     }
 
@@ -143,17 +128,13 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
 
     try {
-        // Clear the cookie
+        
         res.clearCookie("jwt");
 
-        // Redirect to home page after logout
+        
         res.redirect("/");
 
-        // Optional JSON response (for API usage)
-        // res.status(200).json({
-        //     status: "success",
-        //     message: "Logout successful",
-        // });
+
     } catch (error) {
         console.error("Logout error:", error);
         res.status(500).json({
